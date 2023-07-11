@@ -3,33 +3,29 @@ pipeline {
 
   stages {
     
-    stage('Build') {
+    stage('Fetch Scripts') {
       steps {
-        git branch: 'main', url: 'https://github.com/saisrinisrinivas/nodejsrepo.git'
-        sh 'docker build -t demojenkins .'
+       checkout([$class:'GitSCM',branches:[[name: '/*main']], userRemoteConfigs : [[url:'https://github.com/saisrinisrinivas/nodejsrepo.git']])
+                sh 'chmod +x build.sh push.sh deploy.sh'
       }
     }
-    stage('loginintoECR') {
-      steps {
-        
-        sh 'aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/s9e0w9o5'
+                 }
+    stage ('Build') {
 
+      steps {
+        sh './build.sh'
       }
     }
+    stage ('Push') {
 
-
-    stage('PushintoECR') {
       steps {
-        sh 'docker tag demojenkins:latest public.ecr.aws/s9e0w9o5/demojenkins:latest'
-        sh 'docker push public.ecr.aws/s9e0w9o5/demojenkins:latest'
+        sh './push.sh'
       }
     }
-     stage('DeployIntoEc2') {
+    stage ('Deploy') {
+
       steps {
-      sh '''docker pull public.ecr.aws/s9e0w9o5/demojenkins:latest 
-      docker run -itd --network=host public.ecr.aws/s9e0w9o5/demojenkins:latest 
-            
-      '''
+        sh './deploy.sh'
       }
     }
     
