@@ -5,8 +5,9 @@ pipeline {
     
     stage('Fetch Scripts') {
       steps {
-       checkout([$class:'GitSCM',branches:[[name: '/*main']], userRemoteConfigs : [[url:'https://github.com/saisrinisrinivas/nodejsrepo.git']])
-                sh 'chmod +x build.sh push.sh deploy.sh'
+         checkout([$class: 'GitSCM', branches: [[name: '*/main']],
+                    userRemoteConfigs: [[url: 'https://github.com/saisrinisrinivas/nodejsrepo.git']]])
+        sh 'chmod +x build.sh push.sh deploy.sh'
       }
     }
                  }
