@@ -10,7 +10,7 @@ pipeline {
         sh 'chmod +x build.sh push.sh deploy.sh'
       }
     }
-                 }
+        
     stage ('Build') {
 
       steps {
