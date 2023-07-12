@@ -17,6 +17,8 @@ pipeline {
         sh './build.sh'
       }
     }
+   
+    
     stage ('Push') {
 
       steps {
@@ -24,6 +26,9 @@ pipeline {
       }
     }
     stage ('Deploy') {
+      input {
+        message 'Do you want to process with the deployment'
+        ok "Deploy"
 
       steps {
         sh './deploy.sh'
